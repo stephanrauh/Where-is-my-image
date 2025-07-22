@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: photo_browser
+      POSTGRES_USER: photo_user
+      POSTGRES_PASSWORD: photo_pass
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://photo_user:photo_pass@db:5432/photo_browser
+    volumes:
+      - ./images:/app/images
+
