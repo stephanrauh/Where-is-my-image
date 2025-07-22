@@ -83,11 +83,17 @@ class PhotoBrowser {
 
             grid.innerHTML = data.images.map(image => `
                 <div class="bg-gray-50 rounded-lg p-4">
-                    <div class="aspect-square bg-gray-200 rounded mb-3 flex items-center justify-center">
-                        <span class="text-gray-400 text-sm">No preview</span>
+                    <div class="aspect-square bg-gray-200 rounded mb-3 overflow-hidden">
+                        ${image.width && image.height ? 
+                            `<img src="/api/images/${image.id}/thumbnail" 
+                                 alt="${image.filename}" 
+                                 class="w-full h-full object-cover"
+                                 onerror="this.parentElement.innerHTML='<span class=\\"text-gray-400 text-sm flex items-center justify-center h-full\\">Preview unavailable</span>'">` :
+                            `<div class="flex items-center justify-center h-full"><span class="text-gray-400 text-sm">No preview</span></div>`
+                        }
                     </div>
                     <h3 class="font-semibold text-sm truncate" title="${image.filename}">${image.filename}</h3>
-                    <p class="text-xs text-gray-500">${image.width} × ${image.height}</p>
+                    <p class="text-xs text-gray-500">${image.width && image.height ? `${image.width} × ${image.height}` : 'Dimensions unavailable'}</p>
                     <p class="text-xs text-gray-500">${this.formatFileSize(image.file_size)}</p>
                     <p class="text-xs text-gray-500">${image.format}</p>
                 </div>

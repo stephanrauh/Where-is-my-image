@@ -58,7 +58,7 @@ The next steps assume you've already created the virtual environment (for exampl
 ./start-db-only.sh
 source venv/bin/activate
 cd backend
-python main.py
+python main.py (or start the file in your IDE's debugger)
 ```
 
 - **Windows**: 
@@ -66,7 +66,7 @@ python main.py
 ./start-db-only.bat
 venv\Scripts\activate.bat
 cd backend
-python main.py
+python main.py (or start the file in your IDE's debugger)
 ```
 
 Then open http://localhost:8000 in your browser!
