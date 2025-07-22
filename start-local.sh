@@ -13,7 +13,7 @@ sleep 10
 # Wait for database to accept connections
 echo "Checking database connection..."
 for i in {1..30}; do
-    if docker compose -f docker-compose.db-only.yml exec db pg_isready -U photo_user -d photo_browser > /dev/null 2>&1; then
+    if docker compose -f docker-compose.db-only.yml ps db | grep -q "healthy"; then
         echo "Database is ready!"
         break
     fi
@@ -44,7 +44,7 @@ echo "To stop the database: docker compose -f docker-compose.db-only.yml down"
 echo ""
 
 # Set environment variable for local database connection
-export DATABASE_URL="postgresql://photo_user:photo_pass@localhost:5432/photo_browser"
+export DATABASE_URL="postgresql://photo_user:photo_pass@127.0.0.1:5432/photo_browser"
 
 # Start the application
 cd backend

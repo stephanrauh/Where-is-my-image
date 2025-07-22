@@ -46,7 +46,7 @@ echo To stop the database: docker compose -f docker-compose.db-only.yml down
 echo.
 
 REM Set environment variable for local database connection
-set DATABASE_URL=postgresql://photo_user:photo_pass@localhost:5432/photo_browser
+set DATABASE_URL=postgresql://photo_user:photo_pass@127.0.0.1:5432/photo_browser
 
 REM Start the application
 cd backend

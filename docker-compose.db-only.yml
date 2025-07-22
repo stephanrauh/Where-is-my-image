@@ -7,8 +7,14 @@ services:
       POSTGRES_DB: photo_browser
       POSTGRES_USER: photo_user
       POSTGRES_PASSWORD: photo_pass
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
     volumes:
       - ./database:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U photo_user -d photo_browser"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 

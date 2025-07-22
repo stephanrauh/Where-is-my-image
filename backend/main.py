@@ -11,11 +11,11 @@ app = FastAPI()
 
 create_tables()
 
-app.mount("/static", StaticFiles(directory="vanilla"), name="static")
+app.mount("/static", StaticFiles(directory="../vanilla"), name="static")
 
 @app.get("/")
 async def read_root():
-    return FileResponse("vanilla/index.html")
+    return FileResponse("../vanilla/index.html")
 
 @app.get("/api/images/count")
 async def get_image_count(db: Session = Depends(get_db)):

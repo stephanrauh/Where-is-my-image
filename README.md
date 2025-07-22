@@ -37,6 +37,8 @@ Place your photos in the `images/` folder:
 cp /path/to/your/photos/* images/
 ```
 
+The folder already contains a few images.
+
 ### 3. Run the Application
 
 **Quick Start (Recommended):**
@@ -46,6 +48,26 @@ cp /path/to/your/photos/* images/
 **For Local Development:**
 - **Linux/macOS**: `./start-local.sh` 
 - **Windows**: `start-local.bat`
+
+**Local Development with debugging:**
+
+The next steps assume you've already created the virtual environment (for example, by running the `start-local.sh` or `start-local.bat`).
+
+- **Linux/macOS**: 
+```sh
+./start-db-only.sh
+source venv/bin/activate
+cd backend
+python main.py
+```
+
+- **Windows**: 
+```sh
+./start-db-only.bat
+venv\Scripts\activate.bat
+cd backend
+python main.py
+```
 
 Then open http://localhost:8000 in your browser!
 

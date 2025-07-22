@@ -22,7 +22,13 @@ def extract_exif_data(image_path):
         print(f"Error extracting EXIF from {image_path}: {e}")
         return None
 
-def scan_images_directory(images_path="/app/images", db: Session = None):
+def scan_images_directory(images_path=None, db: Session = None):
+    if images_path is None:
+        # Default path depends on whether we're running in Docker or locally
+        if os.path.exists("/app/images"):
+            images_path = "/app/images"
+        else:
+            images_path = "../images"
     if not os.path.exists(images_path):
         print(f"Images directory {images_path} does not exist")
         return []

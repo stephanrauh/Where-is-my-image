@@ -23,7 +23,7 @@ class Image(Base):
     latitude = Column(Float)
     longitude = Column(Float)
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://photo_user:photo_pass@localhost:5432/photo_browser")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://photo_user:photo_pass@127.0.0.1:5432/photo_browser")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
