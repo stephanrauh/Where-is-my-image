@@ -11,11 +11,21 @@ app = FastAPI()
 
 create_tables()
 
-app.mount("/static", StaticFiles(directory="../vanilla"), name="static")
+# Determine paths based on environment (Docker vs local)
+if os.path.exists("vanilla"):
+    # Running from project root (Docker)
+    static_dir = "vanilla"
+    html_file = "vanilla/index.html"
+else:
+    # Running from backend directory (local development)
+    static_dir = "../vanilla"
+    html_file = "../vanilla/index.html"
+
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 @app.get("/")
 async def read_root():
-    return FileResponse("../vanilla/index.html")
+    return FileResponse(html_file)
 
 @app.get("/api/images/count")
 async def get_image_count(db: Session = Depends(get_db)):

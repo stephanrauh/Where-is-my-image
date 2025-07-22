@@ -6,6 +6,14 @@ from PIL.ExifTags import TAGS
 from sqlalchemy.orm import Session
 from models import Image
 
+# Register HEIF opener for HEIC files
+try:
+    from pillow_heif import register_heif_opener
+    register_heif_opener()
+    print("HEIC/HEIF support enabled")
+except ImportError:
+    print("Warning: pillow-heif not installed, HEIC files won't be supported")
+
 def extract_exif_data(image_path):
     try:
         image = PILImage.open(image_path)
@@ -33,7 +41,7 @@ def scan_images_directory(images_path=None, db: Session = None):
         print(f"Images directory {images_path} does not exist")
         return []
     
-    supported_formats = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff'}
+    supported_formats = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.heic'}
     new_images = []
     
     for root, dirs, files in os.walk(images_path):
@@ -49,9 +57,17 @@ def scan_images_directory(images_path=None, db: Session = None):
                 
                 try:
                     stat = os.stat(filepath)
-                    with PILImage.open(filepath) as img:
-                        width, height = img.size
-                        format_name = img.format
+                    
+                    # Try to open and get image dimensions
+                    try:
+                        with PILImage.open(filepath) as img:
+                            width, height = img.size
+                            format_name = img.format or 'Unknown'
+                    except Exception as img_error:
+                        print(f"Cannot open image {filepath}: {img_error}")
+                        # For unsupported formats, still record basic file info
+                        width, height = None, None
+                        format_name = os.path.splitext(file)[1].upper().lstrip('.')
                     
                     exif_data = extract_exif_data(filepath)
                     
@@ -74,8 +90,10 @@ def scan_images_directory(images_path=None, db: Session = None):
                         db.refresh(db_image)
                     
                     new_images.append(image_record)
+                    print(f"Processed: {file} ({format_name}) - {width}x{height}" if width else f"Processed: {file} ({format_name}) - dimensions unavailable")
                     
                 except Exception as e:
                     print(f"Error processing {filepath}: {e}")
+                    continue
     
     return new_images
